@@ -1,1 +1,61 @@
+#include <stdio.h>
+#include <omp.h>
+
+void multiply_vector_matrix(int N, int vector[N], int matrix[N][N], int result[N]) {
+    int step, i, j;
+    #pragma omp parallel for private(step, i, j)
+    for (step = 0; step < 2 * N - 1; step++) {
+        // Determine the range of elements in the vector to be multiplied
+        int start = (step < N) ? 0 : step - (N - 1);
+        int end = (step < N) ? step : N - 1;
+
+        // Iterate over the elements to be multiplied
+        for (i = start; i <= end; i++) {
+            // Calculate the index of the corresponding element in the matrix
+            j = step - i;
+
+            // Perform the multiplication and accumulate the result
+            #pragma omp atomic
+            result[j] += vector[i] * matrix[i][j];
+        }
+    }
+}
+
+int main() {
+    int N;
+
+    printf("Enter the size of vector and matrix (N): ");
+    scanf("%d", &N);
+
+    int vector[N];
+    int matrix[N][N];
+    int result[N];
+
+    printf("Enter the vector of size %d:\n", N);
+    for (int i = 0; i < N; i++) {
+        scanf("%d", &vector[i]);
+    }
+
+    printf("Enter the matrix of size %dx%d:\n", N, N);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+
+    // Initialize result array to zeros
+    for (int i = 0; i < N; i++) {
+        result[i] = 0;
+    }
+
+    multiply_vector_matrix(N, vector, matrix, result);
+
+    printf("Result: ");
+    for (int i = 0; i < N; i++) {
+        printf("%d ", result[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
 
