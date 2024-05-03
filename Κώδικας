@@ -24,7 +24,7 @@ void multiply_vector_matrix(int N, int vector[N], int matrix[N][N], int result[N
 int main() {
     int N;
 
-    printf("Enter the size of vector and matrix (N): ");
+    printf("Enter the size of vector and matrix (integer N): ");
     scanf("%d", &N);
 
     int vector[N];
