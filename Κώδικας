@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <omp.h>
+#include <omp.h> // Library for parallel program 
 
 void multiply_vector_matrix(int N, int vector[N], int matrix[N][N], int result[N]) {
     int step, i, j;
@@ -15,7 +15,7 @@ void multiply_vector_matrix(int N, int vector[N], int matrix[N][N], int result[N
             j = step - i;
 
             // Perform the multiplication and accumulate the result
-            #pragma omp atomic
+            #pragma omp atomic //Only one thread at a time can enter 
             result[j] += vector[i] * matrix[i][j];
         }
     }
@@ -25,7 +25,7 @@ int main() {
     int N;
 
     printf("Enter the size of vector and matrix (integer N): ");
-    scanf("%d", &N);
+    scanf("%d", &N); //Read the N the user gave 
 
     int vector[N];
     int matrix[N][N];
@@ -48,8 +48,10 @@ int main() {
         result[i] = 0;
     }
 
+    // Call the function for multiplication 
     multiply_vector_matrix(N, vector, matrix, result);
 
+    // Print the result vector 
     printf("Result: ");
     for (int i = 0; i < N; i++) {
         printf("%d ", result[i]);
@@ -58,4 +60,3 @@ int main() {
 
     return 0;
 }
-
